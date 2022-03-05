@@ -60,10 +60,8 @@ public class ProcessInitiatorImpl implements ProcessInitiator {
 				ProcessResponse processResponse = processResponseRepository
 						.save(processService.fetchReturnOrderdeatils(packagingAndDeliveryCharge, quantity));
 				log.info("process response ready");
-				UserRequests entity = new UserRequests(processRequest.getName(), processResponse.getRequestId());
-				if (userRequestsRepository != null && entity != null) {
-					UserRequests save = userRequestsRepository.saveUserRequest(entity);
-				}
+				userRequestsRepository
+						.saveUserRequest(new UserRequests(processRequest.getName(), processResponse.getRequestId()));
 				log.info("user request saved");
 				return processResponse;
 
@@ -73,10 +71,9 @@ public class ProcessInitiatorImpl implements ProcessInitiator {
 				ProcessResponse processResponse = processResponseRepository
 						.save(processService.fetchReturnOrderdeatils(packagingAndDeliveryCharge, quantity));
 				log.info("process response ready");
-				UserRequests entity = new UserRequests(processRequest.getName(), processResponse.getRequestId());
-				if (userRequestsRepository != null) {
-					UserRequests save = userRequestsRepository.saveUserRequest(entity);
-				}
+				userRequestsRepository
+						.saveUserRequest(new UserRequests(processRequest.getName(), processResponse.getRequestId()));
+
 				log.info("user request saved");
 				return processResponse;
 
