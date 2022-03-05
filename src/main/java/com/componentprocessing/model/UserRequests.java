@@ -14,12 +14,10 @@ import lombok.Setter;
 @Getter
 public class UserRequests {
 	@NotNull(message = "Name cannot be null")
-	@Setter
 	private String name;
 
 	@Id
 	@NotNull
-	@Getter
 	@Setter
 	@Column(name = "requestId")
 	private long requestId;
@@ -36,7 +34,7 @@ public class UserRequests {
 
 	@Override
 	public int hashCode() {
-		return 1;
+		return Objects.hash(name, requestId);
 	}
 
 	@Override
