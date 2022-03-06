@@ -1,17 +1,17 @@
 package com.componentprocessing.model;
 
-import java.util.Objects;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Getter
+@EqualsAndHashCode
 public class UserRequests {
 	@NotNull(message = "Name cannot be null")
 	private String name;
@@ -30,17 +30,6 @@ public class UserRequests {
 
 	public UserRequests() {
 		super();
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(name, requestId);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		UserRequests other = (UserRequests) obj;
-		return Objects.equals(name, other.name) && requestId == other.requestId;
 	}
 
 }

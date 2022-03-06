@@ -9,6 +9,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -23,10 +27,13 @@ import com.componentprocessing.exceptions.ConfirmationFailedException;
 import com.componentprocessing.exceptions.PackagingAndDeliverChargeServiceException;
 import com.componentprocessing.exceptions.ProcessingFailedException;
 import com.componentprocessing.exceptions.ValidationFailedException;
+import com.componentprocessing.model.ConfirmReturn;
 import com.componentprocessing.model.ConfirmReturnRequest;
 import com.componentprocessing.model.DefectiveComponentDetail;
 import com.componentprocessing.model.ProcessRequest;
 import com.componentprocessing.model.ProcessResponse;
+import com.componentprocessing.model.UserRequests;
+import com.componentprocessing.services.OrderDetailsService;
 import com.componentprocessing.services.ProcessCompletionService;
 import com.componentprocessing.services.ProcessInitiator;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,6 +51,16 @@ class ComponentProcessingControllerTest {
 
 	@MockBean
 	ProcessCompletionService processCompletionService;
+
+	@MockBean
+	OrderDetailsService orderDetailsService;
+
+	UserRequests userRequests;
+
+	@BeforeEach
+	void setup() {
+		userRequests = new UserRequests("jijo", 10000L);
+	}
 
 	DefectiveComponentDetail defectiveComponentDetail(String componentType) {
 		return new DefectiveComponentDetail("Mobile", componentType, 5);
@@ -189,6 +206,22 @@ class ComponentProcessingControllerTest {
 				.perform(post("/CompleteProcessing").contentType(MediaType.APPLICATION_JSON).content(jsonStringRequest))
 				.andDo(print()).andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.message").value("invalid payment details for confirming return order"));
+
+	}
+
+	@SuppressWarnings("unlikely-arg-type")
+	@Test
+	void testGetOrderDetails() throws Exception {
+		when(orderDetailsService.findOrderDetails(userRequests.getName())).thenReturn(getConfirmReturnRequest());
+		this.mockMvc.perform(get("/getOrderDetails").param("name", userRequests.getName())).andDo(print())
+				.andExpect(status().isOk()).andExpect(result -> result.getResponse().equals(getConfirmReturnRequest()));
+	}
+
+	List<ConfirmReturn> getConfirmReturnRequest() {
+		ConfirmReturn confirmReturn = new ConfirmReturn(200L, "12345678903555", 8000L, 800L);
+		List<ConfirmReturn> cList = new LinkedList<>();
+		cList.add(confirmReturn);
+		return cList;
 
 	}
 
