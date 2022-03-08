@@ -11,7 +11,7 @@
 	<groupId>return-order-management</groupId>
 	<artifactId>component-processing</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>componentprocessing</name>
 	<description>The intent of this Microservice is to determine the Component processing detail. It interacts with </description>
 	<properties>
